@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16
+    container_name: network_monitor_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: network_monitor_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: network_monitor_api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/network_monitor_db
+      API_KEY: agizleme-staj-2026-gizli-anahtar-x7f2k9
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
